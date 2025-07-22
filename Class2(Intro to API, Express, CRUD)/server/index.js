@@ -1,10 +1,14 @@
 const http = require('http');
 const fs = require('fs');
+const urlPack = require('url');
 
 const server = http.createServer((req, res) => {
    const logTime = `${Date.now()} : ${req.url} New req received \n`;
 
    const url = req.url; 
+
+   const parsedUrl = urlPack.parse(url, true);
+   console.log("Parsed url" , parsedUrl);
 
    fs.appendFile('log.txt', logTime, (err, data) => {
 
@@ -12,7 +16,7 @@ const server = http.createServer((req, res) => {
    })
 
    // res.end("Hello from server"); 
-   switch(url) {
+   switch(parsedUrl.pathname) {
       case '/' :
          res.end("Home Page");
          break; 
@@ -21,7 +25,9 @@ const server = http.createServer((req, res) => {
          res.end("About Page");
          break; 
       case '/contact':
-         res.end("Contact Page");
+         // res.end("Contact Page");
+         const userName = parsedUrl.query.name;
+         res.end(`Hello ${userName}`)
          break; 
       default :
          res.end("404 error");
