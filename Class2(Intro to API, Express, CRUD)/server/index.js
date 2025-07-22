@@ -1,7 +1,32 @@
 const http = require('http');
+const fs = require('fs');
 
 const server = http.createServer((req, res) => {
-   res.end("Hello from server"); 
+   const logTime = `${Date.now()} : ${req.url} New req received \n`;
+
+   const url = req.url; 
+
+   fs.appendFile('log.txt', logTime, (err, data) => {
+
+      console.log("Log updated");
+   })
+
+   // res.end("Hello from server"); 
+   switch(url) {
+      case '/' :
+         res.end("Home Page");
+         break; 
+
+      case '/about':
+         res.end("About Page");
+         break; 
+      case '/contact':
+         res.end("Contact Page");
+         break; 
+      default :
+         res.end("404 error");
+         break; 
+   }
 
 }); 
 
